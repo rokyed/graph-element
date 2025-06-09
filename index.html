@@ -15,26 +15,78 @@
 
   <h2>Financial Data</h2>
 
-  <!-- Income graph -->
-  <graph-element
-    data='{"nodes":[{"id":"Jan 2025","x":50,"y":110.0},{"id":"Feb 2025","x":90,"y":123.33},{"id":"Mar 2025","x":130,"y":80.0},{"id":"Apr 2025","x":170,"y":86.67},{"id":"May 2025","x":210,"y":50.0},{"id":"Jun 2025","x":250,"y":136.67}],"edges":[{"from":"Jan 2025","to":"Feb 2025"},{"from":"Feb 2025","to":"Mar 2025"},{"from":"Mar 2025","to":"Apr 2025"},{"from":"Apr 2025","to":"May 2025"},{"from":"May 2025","to":"Jun 2025"}]}'
-    trace='["Jan 2025","Feb 2025","Mar 2025","Apr 2025","May 2025","Jun 2025"]'></graph-element>
-
-  <!-- Expenses graph -->
-  <graph-element
-    data='{"nodes":[{"id":"Jan 2025","x":50,"y":106.67},{"id":"Feb 2025","x":90,"y":143.33},{"id":"Mar 2025","x":130,"y":63.33},{"id":"Apr 2025","x":170,"y":50.0},{"id":"May 2025","x":210,"y":83.33},{"id":"Jun 2025","x":250,"y":183.33}],"edges":[{"from":"Jan 2025","to":"Feb 2025"},{"from":"Feb 2025","to":"Mar 2025"},{"from":"Mar 2025","to":"Apr 2025"},{"from":"Apr 2025","to":"May 2025"},{"from":"May 2025","to":"Jun 2025"}]}'
-    trace='["Jan 2025","Feb 2025","Mar 2025","Apr 2025","May 2025","Jun 2025"]'></graph-element>
-
-  <!-- Net Profit graph -->
-  <graph-element
-    data='{"nodes":[{"id":"Jan 2025","x":50,"y":132.86},{"id":"Feb 2025","x":90,"y":124.29},{"id":"Mar 2025","x":130,"y":118.57},{"id":"Apr 2025","x":170,"y":141.43},{"id":"May 2025","x":210,"y":50.0},{"id":"Jun 2025","x":250,"y":112.86}],"edges":[{"from":"Jan 2025","to":"Feb 2025"},{"from":"Feb 2025","to":"Mar 2025"},{"from":"Mar 2025","to":"Apr 2025"},{"from":"Apr 2025","to":"May 2025"},{"from":"May 2025","to":"Jun 2025"}]}'
-    trace='["Jan 2025","Feb 2025","Mar 2025","Apr 2025","May 2025","Jun 2025"]'></graph-element>
-
-  <!-- Running Balance graph -->
-  <graph-element
-    data='{"nodes":[{"id":"Jan 2025","x":50,"y":221.43},{"id":"Feb 2025","x":90,"y":190.77},{"id":"Mar 2025","x":130,"y":158.71},{"id":"Apr 2025","x":170,"y":132.23},{"id":"May 2025","x":210,"y":83.45},{"id":"Jun 2025","x":250,"y":50.0}],"edges":[{"from":"Jan 2025","to":"Feb 2025"},{"from":"Feb 2025","to":"Mar 2025"},{"from":"Mar 2025","to":"Apr 2025"},{"from":"Apr 2025","to":"May 2025"},{"from":"May 2025","to":"Jun 2025"}]}'
-    trace='["Jan 2025","Feb 2025","Mar 2025","Apr 2025","May 2025","Jun 2025"]'></graph-element>
+  <!-- Combined Financial Data graph -->
+  <graph-element id="finance-graph"></graph-element>
 
   <script src="graph-element.js"></script>
+  <script>
+    const financeData = {
+      "nodes": [
+        {"id": "I-Jan", "x": 50, "y": 110},
+        {"id": "I-Feb", "x": 90, "y": 123.33},
+        {"id": "I-Mar", "x": 130, "y": 80},
+        {"id": "I-Apr", "x": 170, "y": 86.67},
+        {"id": "I-May", "x": 210, "y": 50},
+        {"id": "I-Jun", "x": 250, "y": 136.67},
+
+        {"id": "E-Jan", "x": 50, "y": 106.67},
+        {"id": "E-Feb", "x": 90, "y": 143.33},
+        {"id": "E-Mar", "x": 130, "y": 63.33},
+        {"id": "E-Apr", "x": 170, "y": 50},
+        {"id": "E-May", "x": 210, "y": 83.33},
+        {"id": "E-Jun", "x": 250, "y": 183.33},
+
+        {"id": "N-Jan", "x": 50, "y": 132.86},
+        {"id": "N-Feb", "x": 90, "y": 124.29},
+        {"id": "N-Mar", "x": 130, "y": 118.57},
+        {"id": "N-Apr", "x": 170, "y": 141.43},
+        {"id": "N-May", "x": 210, "y": 50},
+        {"id": "N-Jun", "x": 250, "y": 112.86},
+
+        {"id": "B-Jan", "x": 50, "y": 221.43},
+        {"id": "B-Feb", "x": 90, "y": 190.77},
+        {"id": "B-Mar", "x": 130, "y": 158.71},
+        {"id": "B-Apr", "x": 170, "y": 132.23},
+        {"id": "B-May", "x": 210, "y": 83.45},
+        {"id": "B-Jun", "x": 250, "y": 50}
+      ],
+      "edges": [
+        {"from": "I-Jan", "to": "I-Feb"},
+        {"from": "I-Feb", "to": "I-Mar"},
+        {"from": "I-Mar", "to": "I-Apr"},
+        {"from": "I-Apr", "to": "I-May"},
+        {"from": "I-May", "to": "I-Jun"},
+
+        {"from": "E-Jan", "to": "E-Feb"},
+        {"from": "E-Feb", "to": "E-Mar"},
+        {"from": "E-Mar", "to": "E-Apr"},
+        {"from": "E-Apr", "to": "E-May"},
+        {"from": "E-May", "to": "E-Jun"},
+
+        {"from": "N-Jan", "to": "N-Feb"},
+        {"from": "N-Feb", "to": "N-Mar"},
+        {"from": "N-Mar", "to": "N-Apr"},
+        {"from": "N-Apr", "to": "N-May"},
+        {"from": "N-May", "to": "N-Jun"},
+
+        {"from": "B-Jan", "to": "B-Feb"},
+        {"from": "B-Feb", "to": "B-Mar"},
+        {"from": "B-Mar", "to": "B-Apr"},
+        {"from": "B-Apr", "to": "B-May"},
+        {"from": "B-May", "to": "B-Jun"}
+      ]
+    };
+
+    const financeTraces = [
+      ["I-Jan", "I-Feb", "I-Mar", "I-Apr", "I-May", "I-Jun"],
+      ["E-Jan", "E-Feb", "E-Mar", "E-Apr", "E-May", "E-Jun"],
+      ["N-Jan", "N-Feb", "N-Mar", "N-Apr", "N-May", "N-Jun"],
+      ["B-Jan", "B-Feb", "B-Mar", "B-Apr", "B-May", "B-Jun"]
+    ];
+
+    const financeEl = document.getElementById('finance-graph');
+    financeEl.setAttribute('data', JSON.stringify(financeData));
+    financeEl.setAttribute('trace', JSON.stringify(financeTraces));
+  </script>
 </body>
 </html>
