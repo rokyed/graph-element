@@ -15,4 +15,9 @@ drawn in blue with arrowheads to indicate direction.
 The canvas now displays a light grid and you can use the mouse wheel to
 zoom in and out of the graph.
 
+## Scrolling
+
+Click and drag on the canvas to scroll horizontally and vertically. This
+allows you to pan around larger graphs after zooming in.
+
 Open `index.html` in a browser to see the element in action.
