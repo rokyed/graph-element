@@ -20,4 +20,9 @@ zoom in and out of the graph.
 Click and drag on the canvas to scroll horizontally and vertically. This
 allows you to pan around larger graphs after zooming in.
 
+## Responsive sizing
+
+The canvas automatically resizes to match the element's dimensions so it
+fits wherever you place it.
+
 Open `index.html` in a browser to see the element in action.

@@ -20,6 +20,14 @@ class GraphElement extends HTMLElement {
     this.canvas.addEventListener('mousedown', e => this.onMouseDown(e));
     this.canvas.addEventListener('mousemove', e => this.onMouseMove(e));
     window.addEventListener('mouseup', () => this.onMouseUp());
+
+    // Ensure the canvas always matches the element's size
+    this.resizeObserver = new ResizeObserver(() => this.draw());
+  }
+
+  resizeCanvas() {
+    this.canvas.width = this.clientWidth;
+    this.canvas.height = this.clientHeight;
   }
 
   static get observedAttributes() {
@@ -28,6 +36,11 @@ class GraphElement extends HTMLElement {
 
   connectedCallback() {
     this.render();
+    this.resizeObserver.observe(this);
+  }
+
+  disconnectedCallback() {
+    this.resizeObserver.disconnect();
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -100,6 +113,7 @@ class GraphElement extends HTMLElement {
   }
 
   draw() {
+    this.resizeCanvas();
     const data = this.parseData();
     const traces = this.parseTraces();
     const ctx = this.ctx;
@@ -197,6 +211,8 @@ class GraphElement extends HTMLElement {
         }
         canvas {
           background: #fff;
+          width: 100%;
+          height: 100%;
         }
       </style>
     `;
