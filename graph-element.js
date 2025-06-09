@@ -10,7 +10,7 @@ class GraphElement extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ['data'];
+    return ['data', 'trace'];
   }
 
   connectedCallback() {
@@ -18,7 +18,7 @@ class GraphElement extends HTMLElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (name === 'data' && oldValue !== newValue) {
+    if ((name === 'data' || name === 'trace') && oldValue !== newValue) {
       this.draw();
     }
   }
@@ -34,8 +34,20 @@ class GraphElement extends HTMLElement {
     }
   }
 
+  parseTrace() {
+    const traceAttr = this.getAttribute('trace');
+    if (!traceAttr) return [];
+    try {
+      return JSON.parse(traceAttr);
+    } catch (e) {
+      console.error('graph-element: invalid trace attribute', e);
+      return [];
+    }
+  }
+
   draw() {
     const data = this.parseData();
+    const trace = this.parseTrace();
     const ctx = this.ctx;
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     if (!data) {
@@ -49,10 +61,23 @@ class GraphElement extends HTMLElement {
       const from = data.nodes.find(n => n.id === edge.from);
       const to = data.nodes.find(n => n.id === edge.to);
       if (from && to) {
+        const inTrace = trace.some((id, i) => {
+          return trace[i + 1] && id === edge.from && trace[i + 1] === edge.to;
+        });
+
         ctx.beginPath();
         ctx.moveTo(from.x, from.y);
         ctx.lineTo(to.x, to.y);
+        if (inTrace) {
+          ctx.strokeStyle = '#00f';
+        } else {
+          ctx.strokeStyle = '#000';
+        }
         ctx.stroke();
+
+        if (inTrace) {
+          this.drawArrow(from, to);
+        }
       }
     });
 
@@ -64,6 +89,21 @@ class GraphElement extends HTMLElement {
       ctx.fillStyle = '#000';
       ctx.fillText(node.id, node.x + 7, node.y + 3);
     });
+  }
+
+  drawArrow(from, to) {
+    const ctx = this.ctx;
+    const headlen = 7; // length of head in pixels
+    const angle = Math.atan2(to.y - from.y, to.x - from.x);
+    const tox = to.x;
+    const toy = to.y;
+    ctx.beginPath();
+    ctx.moveTo(tox, toy);
+    ctx.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
+    ctx.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
+    ctx.lineTo(tox, toy);
+    ctx.fillStyle = '#00f';
+    ctx.fill();
   }
 
   render() {
