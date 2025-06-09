@@ -15,6 +15,11 @@ drawn in blue with arrowheads to indicate direction.
 The canvas now displays a light grid and you can use the mouse wheel to
 zoom in and out of the graph.
 
+## Scrolling
+
+Click and drag on the canvas to scroll horizontally and vertically. This
+allows you to pan around larger graphs after zooming in.
+
 ## Responsive sizing
 
 The canvas automatically resizes to match the element's dimensions so it

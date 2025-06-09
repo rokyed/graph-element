@@ -9,7 +9,17 @@ class GraphElement extends HTMLElement {
     this.ctx = this.canvas.getContext('2d');
 
     this.scale = 1;
+    this.offsetX = 0;
+    this.offsetY = 0;
+    this.isPanning = false;
+    this.startPanX = 0;
+    this.startPanY = 0;
+    this.startOffsetX = 0;
+    this.startOffsetY = 0;
     this.canvas.addEventListener('wheel', e => this.onWheel(e));
+    this.canvas.addEventListener('mousedown', e => this.onMouseDown(e));
+    this.canvas.addEventListener('mousemove', e => this.onMouseMove(e));
+    window.addEventListener('mouseup', () => this.onMouseUp());
 
     // Ensure the canvas always matches the element's size
     this.resizeObserver = new ResizeObserver(() => this.draw());
@@ -79,6 +89,29 @@ class GraphElement extends HTMLElement {
     this.draw();
   }
 
+  onMouseDown(e) {
+    e.preventDefault();
+    this.isPanning = true;
+    this.startPanX = e.clientX;
+    this.startPanY = e.clientY;
+    this.startOffsetX = this.offsetX;
+    this.startOffsetY = this.offsetY;
+  }
+
+  onMouseMove(e) {
+    if (!this.isPanning) return;
+    e.preventDefault();
+    const dx = (e.clientX - this.startPanX) / this.scale;
+    const dy = (e.clientY - this.startPanY) / this.scale;
+    this.offsetX = this.startOffsetX + dx;
+    this.offsetY = this.startOffsetY + dy;
+    this.draw();
+  }
+
+  onMouseUp() {
+    this.isPanning = false;
+  }
+
   draw() {
     this.resizeCanvas();
     const data = this.parseData();
@@ -88,6 +121,7 @@ class GraphElement extends HTMLElement {
     ctx.save();
     ctx.scale(this.scale, this.scale);
     this.drawGrid();
+    ctx.translate(this.offsetX, this.offsetY);
     if (!data) {
       ctx.fillStyle = '#000';
       ctx.fillText('No data', 10, 20);
@@ -149,15 +183,19 @@ class GraphElement extends HTMLElement {
   drawGrid() {
     const ctx = this.ctx;
     const spacing = 25;
+    const width = this.canvas.width / this.scale;
+    const height = this.canvas.height / this.scale;
+    const startX = ((-this.offsetX % spacing) + spacing) % spacing;
+    const startY = ((-this.offsetY % spacing) + spacing) % spacing;
     ctx.strokeStyle = '#eee';
     ctx.beginPath();
-    for (let x = 0; x <= this.canvas.width; x += spacing) {
+    for (let x = startX; x <= width; x += spacing) {
       ctx.moveTo(x, 0);
-      ctx.lineTo(x, this.canvas.height);
+      ctx.lineTo(x, height);
     }
-    for (let y = 0; y <= this.canvas.height; y += spacing) {
+    for (let y = startY; y <= height; y += spacing) {
       ctx.moveTo(0, y);
-      ctx.lineTo(this.canvas.width, y);
+      ctx.lineTo(width, y);
     }
     ctx.stroke();
   }
