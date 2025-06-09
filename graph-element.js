@@ -34,11 +34,22 @@ class GraphElement extends HTMLElement {
     }
   }
 
-  parseTrace() {
+  parseTraces() {
     const traceAttr = this.getAttribute('trace');
     if (!traceAttr) return [];
     try {
-      return JSON.parse(traceAttr);
+      const parsed = JSON.parse(traceAttr);
+      if (Array.isArray(parsed)) {
+        // Support both single trace as an array and multiple traces as an array of arrays
+        if (parsed.length === 0) {
+          return [];
+        }
+        if (Array.isArray(parsed[0])) {
+          return parsed;
+        }
+        return [parsed];
+      }
+      return [];
     } catch (e) {
       console.error('graph-element: invalid trace attribute', e);
       return [];
@@ -47,7 +58,7 @@ class GraphElement extends HTMLElement {
 
   draw() {
     const data = this.parseData();
-    const trace = this.parseTrace();
+    const traces = this.parseTraces();
     const ctx = this.ctx;
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     if (!data) {
@@ -61,9 +72,9 @@ class GraphElement extends HTMLElement {
       const from = data.nodes.find(n => n.id === edge.from);
       const to = data.nodes.find(n => n.id === edge.to);
       if (from && to) {
-        const inTrace = trace.some((id, i) => {
-          return trace[i + 1] && id === edge.from && trace[i + 1] === edge.to;
-        });
+        const inTrace = traces.some(trace =>
+          trace.some((id, i) => trace[i + 1] && id === edge.from && trace[i + 1] === edge.to)
+        );
 
         ctx.beginPath();
         ctx.moveTo(from.x, from.y);
