@@ -7,6 +7,9 @@ class GraphElement extends HTMLElement {
     this.canvas.width = 300;
     this.canvas.height = 300;
     this.ctx = this.canvas.getContext('2d');
+
+    this.scale = 1;
+    this.canvas.addEventListener('wheel', e => this.onWheel(e));
   }
 
   static get observedAttributes() {
@@ -56,14 +59,25 @@ class GraphElement extends HTMLElement {
     }
   }
 
+  onWheel(e) {
+    e.preventDefault();
+    const factor = e.deltaY < 0 ? 1.1 : 0.9;
+    this.scale *= factor;
+    this.draw();
+  }
+
   draw() {
     const data = this.parseData();
     const traces = this.parseTraces();
     const ctx = this.ctx;
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    ctx.save();
+    ctx.scale(this.scale, this.scale);
+    this.drawGrid();
     if (!data) {
       ctx.fillStyle = '#000';
       ctx.fillText('No data', 10, 20);
+      ctx.restore();
       return;
     }
 
@@ -100,6 +114,7 @@ class GraphElement extends HTMLElement {
       ctx.fillStyle = '#000';
       ctx.fillText(node.id, node.x + 7, node.y + 3);
     });
+    ctx.restore();
   }
 
   drawArrow(from, to) {
@@ -115,6 +130,22 @@ class GraphElement extends HTMLElement {
     ctx.lineTo(tox, toy);
     ctx.fillStyle = '#00f';
     ctx.fill();
+  }
+
+  drawGrid() {
+    const ctx = this.ctx;
+    const spacing = 25;
+    ctx.strokeStyle = '#eee';
+    ctx.beginPath();
+    for (let x = 0; x <= this.canvas.width; x += spacing) {
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, this.canvas.height);
+    }
+    for (let y = 0; y <= this.canvas.height; y += spacing) {
+      ctx.moveTo(0, y);
+      ctx.lineTo(this.canvas.width, y);
+    }
+    ctx.stroke();
   }
 
   render() {
