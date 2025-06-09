@@ -15,4 +15,9 @@ drawn in blue with arrowheads to indicate direction.
 The canvas now displays a light grid and you can use the mouse wheel to
 zoom in and out of the graph.
 
+## Responsive sizing
+
+The canvas automatically resizes to match the element's dimensions so it
+fits wherever you place it.
+
 Open `index.html` in a browser to see the element in action.
