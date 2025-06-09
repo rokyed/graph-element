@@ -11,13 +11,14 @@
 
   <!-- Use the custom element -->
   <graph-element
+    height="300"
     data='{"nodes":[{"id":"A","x":50,"y":50},{"id":"B","x":200,"y":50},{"id":"C","x":125,"y":200}],"edges":[{"from":"A","to":"B"},{"from":"A","to":"C"},{"from":"B","to":"C"}]}'
     trace='[["A","B","C"],["A","C"]]'></graph-element>
 
   <h2>Financial Data</h2>
 
   <!-- Combined Financial Data graph -->
-  <graph-element id="finance-graph"></graph-element>
+  <graph-element id="finance-graph" height="300"></graph-element>
 
   <script src="graph-element.js"></script>
   <script>

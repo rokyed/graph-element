@@ -31,12 +31,13 @@ class GraphElement extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ['data', 'trace'];
+    return ['data', 'trace', 'height'];
   }
 
   connectedCallback() {
     this.render();
     this.resizeObserver.observe(this);
+    this.updateHeight();
   }
 
   disconnectedCallback() {
@@ -46,6 +47,9 @@ class GraphElement extends HTMLElement {
   attributeChangedCallback(name, oldValue, newValue) {
     if ((name === 'data' || name === 'trace') && oldValue !== newValue) {
       this.draw();
+    }
+    if (name === 'height' && oldValue !== newValue) {
+      this.updateHeight();
     }
   }
 
@@ -80,6 +84,20 @@ class GraphElement extends HTMLElement {
       console.error('graph-element: invalid trace attribute', e);
       return [];
     }
+  }
+
+  updateHeight() {
+    const heightAttr = this.getAttribute('height');
+    if (heightAttr) {
+      if (/^\d+$/.test(heightAttr)) {
+        this.style.height = `${heightAttr}px`;
+      } else {
+        this.style.height = heightAttr;
+      }
+    } else {
+      this.style.removeProperty('height');
+    }
+    this.draw();
   }
 
   onWheel(e) {
