@@ -25,4 +25,13 @@ allows you to pan around larger graphs after zooming in.
 The canvas automatically resizes to match the element's dimensions so it
 fits wherever you place it.
 
+## Custom height
+
+You can set a fixed height for the component by providing a `height`
+attribute. Numeric values are treated as pixel heights:
+
+```html
+<graph-element height="300" data="..."></graph-element>
+```
+
 Open `index.html` in a browser to see the element in action.
